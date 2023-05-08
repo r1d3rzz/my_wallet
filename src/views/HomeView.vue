@@ -1,14 +1,17 @@
 <template>
   <div class="card">
     <div class="card-body">
-      <div>Hello Customer, What Can I help for You?</div>
+      <LoginView />
     </div>
   </div>
 </template>
 
 <script>
+import LoginView from "../components/users/LoginView";
 export default {
   name: "HomeView",
-  components: {},
+  components: {
+    LoginView,
+  },
 };
 </script>
