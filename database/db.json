@@ -1,3 +1,48 @@
 {
-  "users": []
+  "cards": [
+    {
+      "card_number": 3366235913236980,
+      "card_amount": 15000,
+      "card_owner": {
+        "name": "Rider",
+        "email": "rider@gmail.com",
+        "gender": "male",
+        "password": "riderrider"
+      },
+      "id": 1
+    },
+    {
+      "card_number": 8468141855551503,
+      "card_amount": 17000,
+      "card_owner": {
+        "name": "Hla Htay",
+        "email": "hlahtayiabs@gmail.com",
+        "gender": "male",
+        "password": "riderrider"
+      },
+      "id": 2
+    },
+    {
+      "card_number": 3616538736856859,
+      "card_amount": 5000,
+      "card_owner": {
+        "name": "Tint Tint Soe",
+        "email": "tinttintsoe@gmail.com",
+        "gender": "female",
+        "password": "riderrider"
+      },
+      "id": 3
+    },
+    {
+      "card_number": 7275363982941469,
+      "card_amount": 5000,
+      "card_owner": {
+        "name": "Ou Ou Khin",
+        "email": "ouou@gmail.com",
+        "gender": "female",
+        "password": "riderrider"
+      },
+      "id": 4
+    }
+  ]
 }
