@@ -7,17 +7,8 @@
         </div>
         <div class="card-body">
           <div class="alert alert-danger" v-if="error">{{ error }}</div>
-          <form @submit.prevent="createCredit">
-            <div class="form-group mb-3">
-              <label for="name">Name</label>
-              <input
-                type="text"
-                id="name"
-                class="form-control"
-                v-model="name"
-              />
-            </div>
 
+          <form @submit.prevent="createCredit">
             <div class="form-group mb-3">
               <label for="email">Email</label>
               <input
@@ -25,29 +16,6 @@
                 id="email"
                 class="form-control"
                 v-model="email"
-              />
-            </div>
-
-            <div class="form-group mb-3">
-              <label for="">Gender</label>
-              <select
-                class="form-select form-select-md mb-3"
-                aria-label=".form-select-md example"
-                v-model="gender"
-              >
-                <option value="male" selected>Male</option>
-                <option value="female">Female</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-
-            <div class="form-group mb-3">
-              <label for="password">Password</label>
-              <input
-                type="password"
-                id="password"
-                class="form-control"
-                v-model="password"
               />
             </div>
 
@@ -74,43 +42,43 @@
   </div>
 </template>
 <script>
-import { computed, ref } from "vue";
+import useAddCollections from "@/composables/useAddCollection";
+import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { db, timestamp } from "@/firebase/config";
 
 export default {
   setup() {
     let router = useRouter();
+    let { error, addCard } = useAddCollections("cards");
 
-    let api = "http://localhost:3000/cards";
-
-    let name = ref("");
     let email = ref("");
-    let gender = ref("");
-    let password = ref("");
     let amount = ref(5000);
     let card_number = ref(null);
-    let error = ref(null);
 
     let createCreditRandomNumber = () => {
       return Math.floor(1000000000000000 + Math.random() * 9000000000000000);
     };
 
+    let cards = ref([]);
     let createRandomNumber = async () => {
       card_number.value = createCreditRandomNumber();
-      await fetch(api)
-        .then((res) => res.json())
-        .then((data) => {
-          if (card_number.value) {
-            data.forEach((d) => {
-              if (d.card_number !== card_number.value) {
-                card_number.value = card_number.value;
-              }
-            });
-          } else {
-            console.log("hit");
-          }
-        })
-        .catch((err) => console.log(err.message));
+
+      let res = await db.collection("cards").get();
+
+      cards.value = res.docs.map((doc) => {
+        return { id: doc.id, ...doc.data() };
+      });
+
+      let cardNumbers = [];
+
+      cards.value.forEach((card) => {
+        cardNumbers.push(card.card_number);
+      });
+
+      if (cardNumbers.includes(card_number.value)) {
+        card_number.value = createCreditRandomNumber();
+      }
     };
 
     let createCredit = async () => {
@@ -119,20 +87,17 @@ export default {
         card_number: card_number.value,
         card_amount: amount.value,
         card_owner: {
-          name: name.value,
           email: email.value,
-          gender: gender.value,
-          password: password.value,
         },
+        created_at: timestamp(),
       };
 
       if (amount.value >= 5000) {
         try {
-          await fetch(api, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(newCard),
-          }).then((_) => router.push({ name: "home" }));
+          let res = await addCard(newCard);
+          if (res) {
+            router.push({ name: "home" });
+          }
         } catch (err) {
           console.log(err.message);
         }
@@ -146,10 +111,7 @@ export default {
     };
 
     return {
-      name,
       email,
-      gender,
-      password,
       amount,
       error,
       createCredit,

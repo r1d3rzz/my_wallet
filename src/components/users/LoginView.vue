@@ -19,10 +19,8 @@
       <div class="form-group d-flex justify-content-between align-items-center">
         <div class="text-muted">
           If you have no account
-          <router-link
-            :to="{ name: 'createCredit' }"
-            class="text-decoration-none"
-            >Register</router-link
+          <span class="text-primary" role="button" @click="register"
+            >register</span
           >
           Here.
         </div>
@@ -32,6 +30,15 @@
   </div>
 </template>
 <script>
-export default {};
+export default {
+  emits: ["isRegister"],
+  setup(props, { emit }) {
+    let register = () => {
+      emit("isRegister");
+    };
+
+    return { register };
+  },
+};
 </script>
 <style></style>
