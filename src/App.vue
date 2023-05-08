@@ -1,30 +1,37 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view/>
+  <div>
+    <div class="container">
+      <div class="row">
+        <div class="col-md">
+          <div class="card text-center">
+            <div class="card-body">
+              <router-link :to="{ name: 'home' }">Home</router-link> |
+              <router-link :to="{ name: 'createCredit' }"
+                >Create Credit</router-link
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="mt-2">
+          <router-view />
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
-
+<script>
+export default {};
+</script>
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-nav {
-  padding: 30px;
-}
-
-nav a {
+.card-body > a {
+  text-decoration: none;
   font-weight: bold;
-  color: #2c3e50;
+  color: inherit;
 }
 
-nav a.router-link-exact-active {
-  color: #42b983;
+.card-body > .router-link-exact-active {
+  color: blue;
 }
 </style>
