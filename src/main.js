@@ -2,7 +2,12 @@ import { createApp } from "vue";
 import App from "./App.vue";
 import router from "./router";
 import bootstrap from "bootstrap/dist/css/bootstrap.min.css";
+import { auth } from "./firebase/config";
 
-let app = createApp(App);
+let app;
 
-app.use(router).use(bootstrap).mount("#app");
+auth.onAuthStateChanged(() => {
+  if (!app) {
+    app = createApp(App).use(router).use(bootstrap).mount("#app");
+  }
+});
