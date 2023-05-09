@@ -16,7 +16,7 @@
                 <span class="visually-hidden">Loading...</span>
               </div>
 
-              <div>loading...</div>
+              <div>Wait a second...</div>
             </div>
           </div>
           <div class="text-muted">Logged as {{ user.email }}</div>
@@ -186,6 +186,7 @@ export default {
       } else {
         error.value = "Card Amount at least 5000MMK";
         amount.value = 5000;
+        isLoading.value = false;
         setTimeout(() => {
           error.value = null;
         }, 3000);

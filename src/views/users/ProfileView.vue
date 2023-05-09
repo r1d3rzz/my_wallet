@@ -38,6 +38,33 @@
                 </div>
               </div>
             </div>
+
+            <!-- Show Card Start -->
+            <div>
+              <div class="mb-2" v-if="filterCards.length">
+                <div class="card">
+                  <div class="card-body">
+                    <div class="alert alert-danger" v-if="error">
+                      {{ error }}
+                    </div>
+                    <CardsList :cards="filterCards" />
+                  </div>
+                </div>
+              </div>
+              <div class="mb-2 text-center" v-else>
+                <div>
+                  <router-link
+                    :to="{ name: 'createCredit' }"
+                    class="text-decoration-none"
+                  >
+                    <button class="btn btn-primary">
+                      Create Your Credit Card
+                    </button>
+                  </router-link>
+                </div>
+              </div>
+            </div>
+            <!-- Show Card end  -->
           </div>
         </div>
         <div class="card-footer">
@@ -60,15 +87,27 @@
   </div>
 </template>
 <script>
+import getCards from "@/composables/getCards";
+import CardsList from "../../components/cards/CardsList";
 import getUser from "@/composables/getUser";
 import { auth } from "@/firebase/config";
-import { ref, watch } from "vue";
+import { computed, ref, watch } from "vue";
 import { useRouter } from "vue-router";
 
 export default {
+  components: { CardsList },
   setup() {
     let { user } = getUser();
     let router = useRouter();
+    let { cards, error, load } = getCards();
+
+    load();
+
+    let filterCards = computed(() => {
+      return cards.value.filter((card) => {
+        return card.card_owner.email == user.value.email;
+      });
+    });
 
     let isLoading = ref(false);
 
@@ -83,7 +122,7 @@ export default {
       await auth.signOut().then(() => (isLoading.value = false));
     };
 
-    return { user, logout, isLoading };
+    return { user, logout, isLoading, cards, error, filterCards };
   },
 };
 </script>

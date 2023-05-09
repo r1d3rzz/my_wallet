@@ -10,10 +10,6 @@
               </div>
               <div v-if="user">
                 |
-                <router-link :to="{ name: 'createCredit' }"
-                  >Create Credit</router-link
-                >
-                |
                 <router-link :to="{ name: 'userProfile' }">Profile</router-link>
               </div>
             </div>
