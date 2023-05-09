@@ -41,7 +41,19 @@
           </div>
         </div>
         <div class="card-footer">
-          <button class="btn btn-danger" @click="logout">Logout</button>
+          <button class="btn btn-danger" @click="logout" v-if="!isLoading">
+            Logout
+          </button>
+          <button
+            class="btn btn-danger d-flex align-items-center"
+            disabled
+            v-if="isLoading"
+          >
+            <div class="spinner-border spinner-border-sm me-2" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <div>loading...</div>
+          </button>
         </div>
       </div>
     </div>
@@ -50,7 +62,7 @@
 <script>
 import getUser from "@/composables/getUser";
 import { auth } from "@/firebase/config";
-import { watch } from "vue";
+import { ref, watch } from "vue";
 import { useRouter } from "vue-router";
 
 export default {
@@ -58,17 +70,20 @@ export default {
     let { user } = getUser();
     let router = useRouter();
 
+    let isLoading = ref(false);
+
     watch(user, () => {
       if (!user.value) {
         router.push({ name: "home" });
       }
     });
 
-    let logout = () => {
-      auth.signOut();
+    let logout = async () => {
+      isLoading.value = true;
+      await auth.signOut().then(() => (isLoading.value = false));
     };
 
-    return { user, logout };
+    return { user, logout, isLoading };
   },
 };
 </script>

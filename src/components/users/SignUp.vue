@@ -35,7 +35,19 @@
             <span class="text-primary" role="button" @click="login">login</span>
             Here.
           </div>
-          <button class="btn btn-primary">Create Account</button>
+          <button class="btn btn-primary" v-if="!isLoading">
+            Create Account
+          </button>
+          <button
+            class="btn btn-primary d-flex align-items-center"
+            disabled
+            v-if="isLoading"
+          >
+            <div class="spinner-border spinner-border-sm me-2" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <div>loading...</div>
+          </button>
         </div>
       </form>
     </div>
@@ -52,6 +64,7 @@ export default {
     let { user_error, register } = useSignUp();
 
     let router = useRouter();
+    let isLoading = ref(false);
 
     let name = ref("");
     let email = ref("");
@@ -62,10 +75,13 @@ export default {
     };
 
     let signUp = async () => {
+      isLoading.value = true;
       let res = await register(name.value, email.value, password.value);
       if (res) {
+        isLoading.value = false;
         router.push({ name: "userProfile" });
       }
+      isLoading.value = false;
     };
 
     return {
@@ -73,6 +89,7 @@ export default {
       email,
       password,
       user_error,
+      isLoading,
       login,
       signUp,
     };

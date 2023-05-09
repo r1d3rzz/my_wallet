@@ -32,7 +32,17 @@
             >
             Here.
           </div>
-          <button class="btn btn-primary">Login</button>
+          <button class="btn btn-primary" v-if="!isLoading">Login</button>
+          <button
+            class="btn btn-primary d-flex align-items-center"
+            disabled
+            v-if="isLoading"
+          >
+            <div class="spinner-border spinner-border-sm me-2" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
+            <div>loading...</div>
+          </button>
         </div>
       </form>
     </div>
@@ -51,25 +61,33 @@ export default {
     let error = ref(null);
     let router = useRouter();
 
+    let isLoading = ref(false);
+
     let register = () => {
       emit("isRegister");
     };
 
     let login = async () => {
+      isLoading.value = true;
       try {
         let res = await auth.signInWithEmailAndPassword(
           email.value,
           password.value
         );
         if (res) {
+          isLoading.value = false;
           router.push({ name: "userProfile" });
         }
       } catch (err) {
+        isLoading.value = false;
         error.value = "Password or Email is Incorrect";
+        setTimeout(() => {
+          error.value = "";
+        }, 2000);
       }
     };
 
-    return { register, login, email, password, error };
+    return { register, login, email, password, error, isLoading };
   },
 };
 </script>
