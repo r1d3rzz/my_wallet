@@ -40,7 +40,7 @@
             </div>
 
             <!-- Show Card Start -->
-            <div>
+            <div v-if="cards.length">
               <div class="mb-2" v-if="filterCards.length">
                 <div class="card">
                   <div class="card-body">
@@ -64,6 +64,7 @@
                 </div>
               </div>
             </div>
+            <div v-else>Loading....</div>
             <!-- Show Card end  -->
           </div>
         </div>

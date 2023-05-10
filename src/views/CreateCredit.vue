@@ -24,7 +24,52 @@
         <div class="card-body">
           <div class="alert alert-danger" v-if="error">{{ error }}</div>
 
-          <form @submit.prevent="createCredit">
+          <!-- User Card Info start  -->
+          <div class="card mb-2 bg-primary" v-if="filterCardUser.length">
+            <div class="card-body">
+              <div class="card">
+                <div
+                  class="card-body"
+                  v-for="card in filterCardUser"
+                  :key="card.card_number"
+                >
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <p class="mb-0">Card Number</p>
+                    </div>
+                    <div class="col-sm-9">
+                      <p class="text-muted mb-0">{{ card.card_number }}</p>
+                    </div>
+                  </div>
+                  <hr />
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <p class="mb-0">Card Holder Name</p>
+                    </div>
+                    <div class="col-sm-9">
+                      <p class="text-muted mb-0">{{ card.card_owner.name }}</p>
+                    </div>
+                  </div>
+                  <hr />
+                  <div class="row">
+                    <div class="col-sm-3">
+                      <p class="mb-0">Card Balance</p>
+                    </div>
+                    <div class="col-sm-9">
+                      <p class="text-muted mb-0">{{ card.card_amount }} MMK</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <!-- User Card Info End  -->
+
+          <form
+            @submit.prevent="
+              isEmailExists ? fillCreditAmount() : createCredit()
+            "
+          >
             <div class="form-group mb-3">
               <label for="email">Email</label>
               <input
@@ -91,16 +136,16 @@ export default {
     let cardUsers = ref([]);
     let cardUsersEmail = ref([]);
     let isEmailExists = ref(null);
-
+    let cards = ref([]);
     let email = ref(user.value.email);
-    let amount = ref(5000);
+    let amount = ref(1000);
     let card_number = ref(null);
+    let filterCardUser = ref([]);
 
     let createCreditRandomNumber = () => {
       return Math.floor(1000000000000000 + Math.random() * 9000000000000000);
     };
 
-    let cards = ref([]);
     let createRandomNumber = async () => {
       card_number.value = createCreditRandomNumber();
 
@@ -138,10 +183,59 @@ export default {
 
       if (cardUsersEmail.value.includes(user.value.email)) {
         isEmailExists.value = true;
+        filterCardUser.value = cards.value.filter((card) => {
+          return card.card_owner.email == user.value.email;
+        });
       } else {
         isEmailExists.value = false;
       }
     });
+
+    let fillCreditAmount = async () => {
+      isLoading.value = true;
+
+      let cardId = filterCardUser.value[0].id;
+      let originalCardAmount = filterCardUser.value[0].card_amount;
+
+      if (user.value.email !== email.value) {
+        error.value = "Your Email is not Exists";
+        isLoading.value = false;
+        setTimeout(() => {
+          error.value = "";
+        }, 3000);
+        return;
+      }
+
+      if (amount.value >= 1000) {
+        try {
+          await db
+            .collection("cards")
+            .doc(cardId)
+            .update({
+              card_amount: originalCardAmount + amount.value,
+              updated_at: timestamp(),
+            })
+            .then(() => {
+              isLoading.value = false;
+              router.push({ name: "userProfile" });
+            });
+        } catch (err) {
+          isLoading.value = false;
+          error.value = "Somethings wrong! Try Again.";
+          setTimeout(() => {
+            error.value = "";
+          }, 3000);
+          console.log(err.message);
+        }
+      } else {
+        error.value = "Card Re-Charge Amount at least 1000 MMK";
+        amount.value = 1000;
+        isLoading.value = false;
+        setTimeout(() => {
+          error.value = null;
+        }, 3000);
+      }
+    };
 
     let createCredit = async () => {
       isLoading.value = true;
@@ -168,7 +262,7 @@ export default {
         updated_at: null,
       };
 
-      if (amount.value >= 5000) {
+      if (amount.value >= 1000) {
         try {
           let res = await addCard(newCard);
           if (res) {
@@ -184,8 +278,8 @@ export default {
           console.log(err.message);
         }
       } else {
-        error.value = "Card Amount at least 5000MMK";
-        amount.value = 5000;
+        error.value = "Card Amount at least 1000 MMK";
+        amount.value = 1000;
         isLoading.value = false;
         setTimeout(() => {
           error.value = null;
@@ -201,6 +295,8 @@ export default {
       isLoading,
       isEmailExists,
       createCredit,
+      fillCreditAmount,
+      filterCardUser,
     };
   },
 };
