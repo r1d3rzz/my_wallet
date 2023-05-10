@@ -4,7 +4,7 @@
       <div v-if="user">
         <div class="fs-3">Welcome {{ user.displayName }}</div>
       </div>
-      <div v-if="!user">
+      <div v-else>
         <LoginView v-if="!isSignUp" @isRegister="isSignUp = true" />
         <SignUp v-else @isLogin="isSignUp = false" />
       </div>
