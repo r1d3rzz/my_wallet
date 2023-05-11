@@ -6,7 +6,8 @@
           <div class="card text-center">
             <div class="card-body d-flex justify-content-center">
               <div>
-                <router-link :to="{ name: 'home' }">Home</router-link>
+                <router-link :to="{ name: 'home' }">Home</router-link> |
+                <router-link :to="{ name: 'shop' }">Shop</router-link>
               </div>
               <div v-if="user">
                 |

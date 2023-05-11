@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
+import ShopView from "../views/shop/ShopView.vue";
 import CreateCredit from "../views/CreateCredit.vue";
 import ProfileView from "../views/users/ProfileView.vue";
 import PageNotFound from "../components/PageNotFound.vue";
@@ -10,6 +11,11 @@ const routes = [
     path: "/",
     name: "home",
     component: HomeView,
+  },
+  {
+    path: "/shop",
+    name: "shop",
+    component: ShopView,
   },
   {
     path: "/users/credit/create",
