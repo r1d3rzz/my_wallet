@@ -6,7 +6,7 @@ let error = ref("");
 let getItems = () => {
   let load = async () => {
     try {
-      let res = await fetch("https://fakestoreapi.com/products");
+      let res = await fetch(`https://fakestoreapi.com/products`);
       if (res.status == 404) {
         throw new Error("url not found");
       }
