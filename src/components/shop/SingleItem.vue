@@ -7,7 +7,14 @@
         </div>
       </div>
       <div class="mb-2 text-start">
-        {{ introTitle }}... <small class="text-muted">See More</small>
+        {{ introTitle }}...
+        <span>
+          <router-link
+            :to="{ name: 'itemDetail', params: { id: item.id } }"
+            class="text-decoration-none text-muted"
+            >See More</router-link
+          >
+        </span>
       </div>
       <div class="text-start border border-1 rounded-2 p-2 bg-light my-3">
         <div class="text-secondary">Price : {{ item.price }} MMK</div>
@@ -21,6 +28,7 @@
 </template>
 <script>
 export default {
+  components: {},
   props: ["item"],
   setup(props) {
     let introTitle = props.item.title.substring(0, 30);

@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import ShopView from "../views/shop/ShopView.vue";
+import ItemDetail from "../components/shop/ItemDetail.vue";
 import CreateCredit from "../views/CreateCredit.vue";
 import ProfileView from "../views/users/ProfileView.vue";
 import PageNotFound from "../components/PageNotFound.vue";
@@ -16,6 +17,12 @@ const routes = [
     path: "/shop",
     name: "shop",
     component: ShopView,
+  },
+  {
+    path: "/shop/item/:id",
+    name: "itemDetail",
+    component: ItemDetail,
+    props: true,
   },
   {
     path: "/users/credit/create",

@@ -1,21 +1,14 @@
 <template>
-  <div class="card m-2 sticky-top" style="background-color: #ffd6ff">
+  <div class="card m-2 sticky-top filterNav" style="background-color: #ffd6ff">
     <div class="card-body">
       <div class="row">
         <div class="col-md-5">
           <div class="input-group">
-            <input
-              type="text"
-              v-model="search"
-              placeholder="Search Items"
-              class="form-control w-50 bg-light"
-              @keyup.prevent="searchFilterItems"
-            />
             <select
               class="form-select bg-light"
               aria-label="Default select example"
             >
-              <option @click="filterCategory('all')" selected>All</option>
+              <option @click="filterCategory('all')" selected>All Items</option>
               <option
                 :value="category"
                 v-for="category in uniqueItemsCategories"
@@ -25,6 +18,16 @@
                 {{ category.charAt(0).toUpperCase() + category.slice(1) }}
               </option>
             </select>
+            <input
+              type="text"
+              v-model="search"
+              placeholder="Search Items"
+              class="form-control w-50 bg-light"
+              @keyup.prevent="searchFilterItems"
+            />
+            <button class="btn btn-primary" @click="backspaceBtn">
+              <i class="fas fa-backspace"></i>
+            </button>
           </div>
         </div>
       </div>
@@ -45,6 +48,11 @@ export default {
       emit("searchItems", search.value);
     };
 
+    let backspaceBtn = () => {
+      search.value = search.value.slice(0, -1);
+      searchFilterItems();
+    };
+
     props.items.forEach((item) => {
       categories.push(item.category);
     });
@@ -62,8 +70,13 @@ export default {
       searchFilterItems,
       uniqueItemsCategories,
       filterCategory,
+      backspaceBtn,
     };
   },
 };
 </script>
-<style></style>
+<style scoped>
+.filterNav {
+  z-index: 2;
+}
+</style>

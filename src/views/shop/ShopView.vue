@@ -30,7 +30,7 @@ export default {
     let { items, error, load } = getItems();
 
     let search = ref("");
-    let category = ref("");
+    let category = ref("all");
 
     onMounted(() => {
       load();
@@ -48,8 +48,8 @@ export default {
       if (category.value !== "all") {
         return items.value.filter((item) => {
           return (
-            item.title.toLowerCase().includes(search.value.toLowerCase()) &&
-            item.category.toLowerCase().includes(category.value.toLowerCase())
+            item.category === category.value &&
+            item.title.toLowerCase().includes(search.value.toLowerCase())
           );
         });
       }
