@@ -5,8 +5,8 @@
         <div class="card-header">
           <div class="fs-3">
             <div v-if="isEmailExists != null">
-              <span v-if="!isEmailExists">Create A Credit Card</span>
-              <span v-if="isEmailExists">Fill Your Credit Card Amount</span>
+              <span v-if="!isEmailExists">Create Your Wallet</span>
+              <span v-if="isEmailExists">Fill Your Wallet Balance</span>
             </div>
             <div v-if="isEmailExists == null" class="d-flex align-items-center">
               <div
@@ -35,7 +35,7 @@
                 >
                   <div class="row">
                     <div class="col-sm-3">
-                      <p class="mb-0">Card Number</p>
+                      <p class="mb-0">No.</p>
                     </div>
                     <div class="col-sm-9">
                       <p class="text-muted mb-0">{{ card.card_number }}</p>
@@ -44,7 +44,7 @@
                   <hr />
                   <div class="row">
                     <div class="col-sm-3">
-                      <p class="mb-0">Card Holder Name</p>
+                      <p class="mb-0">Holder Name</p>
                     </div>
                     <div class="col-sm-9">
                       <p class="text-muted mb-0">{{ card.card_owner.name }}</p>
@@ -53,7 +53,7 @@
                   <hr />
                   <div class="row">
                     <div class="col-sm-3">
-                      <p class="mb-0">Card Balance</p>
+                      <p class="mb-0">Balance</p>
                     </div>
                     <div class="col-sm-9">
                       <p class="text-muted mb-0">{{ card.card_amount }} MMK</p>
@@ -81,7 +81,7 @@
             </div>
 
             <div class="form-group mb-3">
-              <label for="amount">Add Card Amount</label>
+              <label for="amount">Add Wallet Amount</label>
               <div class="input-group">
                 <input
                   type="number"
@@ -93,7 +93,15 @@
               </div>
             </div>
 
-            <div class="d-flex justify-content-end mt-2">
+            <div class="d-flex justify-content-between align-items-center mt-2">
+              <div>
+                <button
+                  class="btn btn-link text-decoration-none"
+                  @click="goBackProfile"
+                >
+                  <i class="fas fa-chevron-left"></i> Profile
+                </button>
+              </div>
               <div v-if="isEmailExists !== null">
                 <button class="btn btn-primary" v-if="!isLoading">
                   <span v-if="!isEmailExists">Create</span>
@@ -237,6 +245,10 @@ export default {
       }
     };
 
+    let goBackProfile = () => {
+      router.push({ name: "userProfile" });
+    };
+
     let createCredit = async () => {
       isLoading.value = true;
 
@@ -297,6 +309,7 @@ export default {
       createCredit,
       fillCreditAmount,
       filterCardUser,
+      goBackProfile,
     };
   },
 };

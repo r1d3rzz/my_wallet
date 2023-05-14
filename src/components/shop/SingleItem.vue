@@ -21,19 +21,50 @@
         <div>Rating : {{ item.rating.rate }}</div>
       </div>
       <div class="mt-2">
-        <button class="w-100 btn btn-primary rounded-1">Add to Cart</button>
+        <button
+          v-if="!getCartItemId.includes(item.id)"
+          class="w-100 btn btn-primary rounded-1"
+          @click="addToCartBtn(item)"
+        >
+          Add to Cart
+        </button>
+        <button
+          v-if="getCartItemId.includes(item.id)"
+          class="w-100 btn btn-danger rounded-1"
+          @click="removeFromCartBtn(item)"
+        >
+          Remove from Cart
+        </button>
       </div>
     </div>
   </div>
 </template>
 <script>
+import store from "@/store";
+import { computed, ref } from "vue";
+
 export default {
   components: {},
   props: ["item"],
   setup(props) {
     let introTitle = props.item.title.substring(0, 30);
+    let getCartItemId = computed(() => store.getters.getCartItemId);
 
-    return { introTitle };
+    let addToCartBtn = (item) => {
+      store.commit("setCartItemId", item.id);
+      store.commit("setItems", item);
+    };
+
+    let removeFromCartBtn = (item) => {
+      store.commit("removeItem", item);
+    };
+
+    return {
+      introTitle,
+      addToCartBtn,
+      removeFromCartBtn,
+      getCartItemId,
+    };
   },
 };
 </script>

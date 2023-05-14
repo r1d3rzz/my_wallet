@@ -47,7 +47,20 @@
                     </div>
                     <hr />
                     <div>
-                      <button class="btn btn-primary w-100">Add to Cart</button>
+                      <button
+                        class="btn btn-primary w-100"
+                        @click="addToCartBtn(item)"
+                        v-if="!getCartItemId.includes(item.id)"
+                      >
+                        Add to Cart
+                      </button>
+                      <button
+                        @click="removeFromCartBtn(item)"
+                        class="btn btn-danger w-100"
+                        v-if="getCartItemId.includes(item.id)"
+                      >
+                        Remove from Cart
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -65,13 +78,24 @@
 <script>
 import getItem from "@/composables/getItem";
 import router from "@/router";
+import store from "@/store";
+import { computed } from "vue";
 import { useRouter } from "vue-router";
 
 export default {
   props: ["id"],
   setup(props) {
     let { item, error, load } = getItem(props.id);
-    let rotuer = useRouter();
+    let getCartItemId = computed(() => store.getters.getCartItemId);
+
+    let addToCartBtn = (item) => {
+      store.commit("setCartItemId", item.id);
+      store.commit("setItems", item);
+    };
+
+    let removeFromCartBtn = (item) => {
+      store.commit("removeItem", item);
+    };
 
     load();
 
@@ -79,7 +103,14 @@ export default {
       router.go(-1);
     };
 
-    return { item, error, goBack };
+    return {
+      item,
+      error,
+      goBack,
+      getCartItemId,
+      addToCartBtn,
+      removeFromCartBtn,
+    };
   },
 };
 </script>

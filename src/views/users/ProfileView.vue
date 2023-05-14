@@ -114,9 +114,7 @@
                     :to="{ name: 'createCredit' }"
                     class="text-decoration-none"
                   >
-                    <button class="btn btn-primary">
-                      Create Your Credit Card
-                    </button>
+                    <button class="btn btn-primary">Create Your Wallet</button>
                   </router-link>
                 </div>
               </div>

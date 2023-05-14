@@ -5,7 +5,7 @@
         <div class="card-body">
           <div class="d-flex justify-content-between align-items-center">
             <img src="https://i.imgur.com/gfp4wrR.png" width="50" />
-            <h3 class="text-dark">Credit Card</h3>
+            <h3 class="text-dark">My Wallet</h3>
           </div>
           <div
             class="px-2 number mt-3 d-flex justify-content-between align-items-center"
@@ -17,8 +17,8 @@
           </div>
           <div class="p-4 card-border mt-4">
             <div class="d-flex justify-content-between align-items-center">
-              <span class="cardholder">Card Holder</span>
-              <span class="expires">Amount</span>
+              <span class="cardholder">Wallet Holder</span>
+              <span class="expires">Balance</span>
             </div>
             <div class="d-flex justify-content-between align-items-center">
               <span class="name">{{ card.card_owner.name }}</span>
@@ -32,7 +32,7 @@
     </div>
     <div class="card-footer text-center">
       <router-link :to="{ name: 'createCredit' }">
-        <button class="btn btn-primary">Add Amount in Your Card Here</button>
+        <button class="btn btn-primary">Re-fill wallet balance Here</button>
       </router-link>
     </div>
   </div>

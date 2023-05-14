@@ -1,19 +1,20 @@
 <template>
   <div class="card m-2 sticky-top filterNav" style="background-color: #ffd6ff">
     <div class="card-body">
-      <div class="row">
+      <div class="row d-flex justify-content-between align-items-center">
         <div class="col-md-5">
           <div class="input-group">
             <select
               class="form-select bg-light"
               aria-label="Default select example"
+              v-model="categoryName"
+              @change="filterCategory(categoryName)"
             >
-              <option @click="filterCategory('all')" selected>All Items</option>
+              <option value="all" selected>All Items</option>
               <option
                 :value="category"
                 v-for="category in uniqueItemsCategories"
                 :key="category"
-                @click="filterCategory(category)"
               >
                 {{ category.charAt(0).toUpperCase() + category.slice(1) }}
               </option>
@@ -30,12 +31,37 @@
             </button>
           </div>
         </div>
+        <div class="col-md d-flex justify-content-end">
+          <button
+            type="button"
+            class="btn btn-primary position-relative me-2"
+            v-if="cartItems.length"
+          >
+            <i class="fas fa-shopping-cart fs-5"></i>
+            <span
+              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+              v-if="cartItems.length"
+            >
+              {{ cartItems.length }}
+              <span class="visually-hidden">unread messages</span>
+            </span>
+          </button>
+          <button
+            v-else
+            type="button"
+            class="btn btn-primary position-relative me-2"
+            disabled
+          >
+            <i class="fas fa-shopping-cart fs-5"></i>
+          </button>
+        </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-import { computed, ref } from "vue";
+import store from "@/store";
+import { ref, computed } from "vue";
 
 export default {
   props: ["items"],
@@ -43,6 +69,8 @@ export default {
   setup(props, { emit }) {
     let search = ref("");
     let categories = [];
+    let categoryName = ref("all");
+    let cartItems = computed(() => store.getters.cartItems);
 
     let searchFilterItems = () => {
       emit("searchItems", search.value);
@@ -61,8 +89,8 @@ export default {
       return array.indexOf(category) == index;
     });
 
-    let filterCategory = (category) => {
-      emit("categoryFilter", category);
+    let filterCategory = (value) => {
+      emit("categoryFilter", value);
     };
 
     return {
@@ -71,6 +99,8 @@ export default {
       uniqueItemsCategories,
       filterCategory,
       backspaceBtn,
+      cartItems,
+      categoryName,
     };
   },
 };
