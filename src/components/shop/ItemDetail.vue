@@ -46,20 +46,32 @@
                       >MMK
                     </div>
                     <hr />
-                    <div>
+                    <div class="text-center">
+                      <div class="fw-bold" v-if="productQuantity(item) > 0">
+                        <div>In Cart</div>
+                        <div class="d-flex justify-content-center my-2">
+                          <button
+                            class="btn btn-sm btn-danger mx-1"
+                            @click="removeFromCart(item)"
+                          >
+                            -
+                          </button>
+                          <div class="mx-2">{{ productQuantity(item) }}</div>
+                          <button
+                            class="btn btn-sm btn-primary mx-1"
+                            @click="addToCart(item)"
+                          >
+                            +
+                          </button>
+                        </div>
+                      </div>
+
                       <button
+                        v-else
                         class="btn btn-primary w-100"
-                        @click="addToCartBtn(item)"
-                        v-if="!getCartItemId.includes(item.id)"
+                        @click="addToCart(item)"
                       >
                         Add to Cart
-                      </button>
-                      <button
-                        @click="removeFromCartBtn(item)"
-                        class="btn btn-danger w-100"
-                        v-if="getCartItemId.includes(item.id)"
-                      >
-                        Remove from Cart
                       </button>
                     </div>
                   </div>
@@ -80,22 +92,12 @@ import getItem from "@/composables/getItem";
 import router from "@/router";
 import store from "@/store";
 import { computed } from "vue";
-import { useRouter } from "vue-router";
 
 export default {
   props: ["id"],
   setup(props) {
     let { item, error, load } = getItem(props.id);
-    let getCartItemId = computed(() => store.getters.getCartItemId);
-
-    let addToCartBtn = (item) => {
-      store.commit("setCartItemId", item.id);
-      store.commit("setItems", item);
-    };
-
-    let removeFromCartBtn = (item) => {
-      store.commit("removeItem", item);
-    };
+    let productQuantity = computed(() => store.getters.productQuantity);
 
     load();
 
@@ -103,13 +105,21 @@ export default {
       router.go(-1);
     };
 
+    let addToCart = (product) => {
+      store.commit("addToCart", product);
+    };
+
+    let removeFromCart = (product) => {
+      store.commit("removeFromCart", product);
+    };
+
     return {
       item,
       error,
       goBack,
-      getCartItemId,
-      addToCartBtn,
-      removeFromCartBtn,
+      productQuantity,
+      addToCart,
+      removeFromCart,
     };
   },
 };

@@ -1,34 +1,63 @@
+function updateLocalStorage(cart) {
+  localStorage.setItem("cart", JSON.stringify(cart));
+}
+
 export default {
   state: {
-    items: [],
-    cartItemId: [],
+    cart: [],
   },
   getters: {
     cartItems(state) {
-      return state.items;
+      return state.cart;
     },
 
-    getCartItemId(state) {
-      return state.cartItemId;
+    productQuantity: (state) => (product) => {
+      const item = state.cart.find((i) => i.id === product.id);
+
+      if (item) return item.quantity;
+      else return null;
     },
   },
   mutations: {
-    setItems(state, item) {
-      state.items.push(item);
+    addToCart(state, product) {
+      let item = state.cart.find((i) => i.id == product.id);
+
+      if (item) {
+        item.quantity++;
+      } else {
+        state.cart.push({ ...product, quantity: 1 });
+      }
+
+      updateLocalStorage(state.cart);
     },
 
-    setCartItemId(state, id) {
-      state.cartItemId.push(id);
+    removeFromCart(state, product) {
+      let item = state.cart.find((i) => i.id == product.id);
+
+      if (item.quantity > 1) {
+        item.quantity--;
+      } else {
+        state.cart = state.cart.filter((i) => i.id !== product.id);
+      }
+
+      updateLocalStorage(state.cart);
     },
 
-    removeItem(state, item) {
-      state.items = state.items.filter((i) => {
-        return i.id !== item.id;
-      });
+    allRemoveFromCart(state, product) {
+      let item = state.cart.find((i) => i.id === product.id);
 
-      state.cartItemId = state.cartItemId.filter((i) => {
-        return item.id !== i;
-      });
+      if (item) {
+        state.cart = state.cart.filter((i) => i.id !== product.id);
+      }
+
+      updateLocalStorage(state.cart);
+    },
+
+    updateCartFromLocalStorage(state) {
+      const cart = localStorage.getItem("cart");
+      if (cart) {
+        state.cart = JSON.parse(cart);
+      }
     },
   },
   actions: {},

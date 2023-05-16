@@ -26,11 +26,17 @@
   </div>
 </template>
 <script>
+import { onMounted } from "vue";
 import getUser from "./composables/getUser";
+import store from "./store";
 
 export default {
   setup() {
     let { user } = getUser();
+
+    onMounted(() => {
+      store.commit("updateCartFromLocalStorage");
+    });
 
     return { user };
   },

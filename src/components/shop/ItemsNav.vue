@@ -31,6 +31,8 @@
             </button>
           </div>
         </div>
+
+        <!-- Cart Button start  -->
         <div class="col-md d-flex justify-content-end">
           <button
             type="button"
@@ -40,7 +42,6 @@
             <i class="fas fa-shopping-cart fs-5"></i>
             <span
               class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-              v-if="cartItems.length"
             >
               {{ cartItems.length }}
               <span class="visually-hidden">unread messages</span>
@@ -55,13 +56,14 @@
             <i class="fas fa-shopping-cart fs-5"></i>
           </button>
         </div>
+        <!-- Cart Button end  -->
       </div>
     </div>
   </div>
 </template>
 <script>
 import store from "@/store";
-import { ref, computed } from "vue";
+import { computed, ref } from "vue";
 
 export default {
   props: ["items"],
@@ -99,8 +101,8 @@ export default {
       uniqueItemsCategories,
       filterCategory,
       backspaceBtn,
-      cartItems,
       categoryName,
+      cartItems,
     };
   },
 };

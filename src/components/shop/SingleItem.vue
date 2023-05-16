@@ -22,18 +22,18 @@
       </div>
       <div class="mt-2">
         <button
-          v-if="!getCartItemId.includes(item.id)"
-          class="w-100 btn btn-primary rounded-1"
-          @click="addToCartBtn(item)"
-        >
-          Add to Cart
-        </button>
-        <button
-          v-if="getCartItemId.includes(item.id)"
-          class="w-100 btn btn-danger rounded-1"
-          @click="removeFromCartBtn(item)"
+          class="btn btn-danger w-100"
+          @click="allRemoveFromCart(item)"
+          v-if="productQuantity(item) > 0"
         >
           Remove from Cart
+        </button>
+        <button
+          v-else
+          class="w-100 btn btn-primary rounded-1"
+          @click="addToCart(item)"
+        >
+          Add to Cart
         </button>
       </div>
     </div>
@@ -41,29 +41,28 @@
 </template>
 <script>
 import store from "@/store";
-import { computed, ref } from "vue";
+import { computed } from "vue";
 
 export default {
   components: {},
   props: ["item"],
   setup(props) {
     let introTitle = props.item.title.substring(0, 30);
-    let getCartItemId = computed(() => store.getters.getCartItemId);
+    let productQuantity = computed(() => store.getters.productQuantity);
 
-    let addToCartBtn = (item) => {
-      store.commit("setCartItemId", item.id);
-      store.commit("setItems", item);
+    let addToCart = (product) => {
+      store.commit("addToCart", product);
     };
 
-    let removeFromCartBtn = (item) => {
-      store.commit("removeItem", item);
+    let allRemoveFromCart = (product) => {
+      store.commit("allRemoveFromCart", product);
     };
 
     return {
       introTitle,
-      addToCartBtn,
-      removeFromCartBtn,
-      getCartItemId,
+      addToCart,
+      productQuantity,
+      allRemoveFromCart,
     };
   },
 };
