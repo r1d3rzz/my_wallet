@@ -34,19 +34,22 @@
 
         <!-- Cart Button start  -->
         <div class="col-md d-flex justify-content-end">
-          <button
-            type="button"
-            class="btn btn-primary position-relative me-2"
-            v-if="cartItems.length"
-          >
-            <i class="fas fa-shopping-cart fs-5"></i>
-            <span
-              class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
-            >
-              {{ cartItems.length }}
-              <span class="visually-hidden">unread messages</span>
-            </span>
-          </button>
+          <div v-if="cartItems.length">
+            <router-link :to="{ name: 'checkout' }">
+              <button
+                type="button"
+                class="btn btn-primary position-relative me-2"
+              >
+                <i class="fas fa-shopping-cart fs-5"></i>
+                <span
+                  class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+                >
+                  {{ cartItems.length }}
+                  <span class="visually-hidden">unread messages</span>
+                </span>
+              </button>
+            </router-link>
+          </div>
           <button
             v-else
             type="button"

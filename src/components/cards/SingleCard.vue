@@ -27,6 +27,10 @@
               >
             </div>
           </div>
+          <div>
+            wallet <i class="fas fa-envelope"></i> :
+            {{ card.card_owner.email }}
+          </div>
         </div>
       </div>
     </div>

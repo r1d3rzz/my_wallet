@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from "vue-router";
 import HomeView from "../views/HomeView.vue";
 import ShopView from "../views/shop/ShopView.vue";
 import ItemDetail from "../components/shop/ItemDetail.vue";
+import ItemsCheckout from "../views/shop/ItemsCheckout.vue";
 import CreateCredit from "../views/CreateCredit.vue";
 import ProfileView from "../views/users/ProfileView.vue";
 import PageNotFound from "../components/PageNotFound.vue";
@@ -23,6 +24,11 @@ const routes = [
     name: "itemDetail",
     component: ItemDetail,
     props: true,
+  },
+  {
+    path: "/shop/checkout",
+    name: "checkout",
+    component: ItemsCheckout,
   },
   {
     path: "/users/credit/create",
