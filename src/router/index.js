@@ -7,6 +7,8 @@ import CreateCredit from "../views/CreateCredit.vue";
 import ProfileView from "../views/users/ProfileView.vue";
 import PageNotFound from "../components/PageNotFound.vue";
 import { auth } from "@/firebase/config";
+import { computed } from "vue";
+import store from "@/store";
 
 const routes = [
   {
@@ -29,6 +31,14 @@ const routes = [
     path: "/shop/checkout",
     name: "checkout",
     component: ItemsCheckout,
+    beforeEnter: (to, from, next) => {
+      let products = computed(() => store.getters.cartItems);
+      if (!products.value.length) {
+        next({ name: "shop" });
+      } else {
+        next();
+      }
+    },
   },
   {
     path: "/users/credit/create",

@@ -17,6 +17,10 @@ export default {
       if (item) return item.quantity;
       else return null;
     },
+
+    cartTotalPrice(state) {
+      return state.cart.reduce((a, b) => a + b.price * b.quantity, 0);
+    },
   },
   mutations: {
     addToCart(state, product) {
