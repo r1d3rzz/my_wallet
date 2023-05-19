@@ -1,4 +1,8 @@
 <template>
+  <ConfirmView v-if="isShow">
+    <LoginView @closeLoginModal="isShow = false" @userLogin="userLogin" />
+  </ConfirmView>
+
   <div class="col-lg-4 bg-light">
     <div class="p-5">
       <h3 class="fw-bold mb-5 mt-2 pt-1">Summary</h3>
@@ -48,11 +52,15 @@
             <div v-else>loading...</div>
           </div>
           <div v-else>
-            <button class="btn btn-dark w-100">Make A Wallet</button>
+            <button class="btn btn-dark w-100" @click="createWallet">
+              Make A Wallet
+            </button>
           </div>
         </div>
         <div v-else>
-          <button class="btn btn-dark w-100">Please Login First</button>
+          <button class="btn btn-dark w-100" @click="isShow = true">
+            Please Login First
+          </button>
         </div>
       </div>
 
@@ -75,12 +83,19 @@
   </div>
 </template>
 <script>
+import LoginView from "../../cards/user/LoginView";
+import ConfirmView from "../../ConfirmView";
 import store from "@/store";
 import { computed, ref } from "vue";
 import getUser from "@/composables/getUser";
 import getCards from "@/composables/getCards";
+import { useRouter } from "vue-router";
 
 export default {
+  components: {
+    LoginView,
+    ConfirmView,
+  },
   props: ["products"],
   setup() {
     let totalPrices = computed(() => store.getters.cartTotalPrice);
@@ -90,6 +105,9 @@ export default {
     let userCard = ref([]);
     let isDisable = ref(true);
     let makeAWallet = ref(false);
+    let isShow = ref(false);
+    let hasUser = ref(false);
+    let router = useRouter();
 
     let getAllCards = async () => {
       await load();
@@ -109,12 +127,32 @@ export default {
       }
     };
 
+    let userLogin = () => {
+      getAllCards();
+      isDisable.value = false;
+    };
+
     if (user.value) {
       getAllCards();
       isDisable.value = false;
     }
 
-    return { totalPrices, user, cards, userCard, isDisable, makeAWallet };
+    let createWallet = () => {
+      router.push({ name: "createCredit" });
+    };
+
+    return {
+      totalPrices,
+      user,
+      cards,
+      userCard,
+      isDisable,
+      makeAWallet,
+      isShow,
+      hasUser,
+      userLogin,
+      createWallet,
+    };
   },
 };
 </script>

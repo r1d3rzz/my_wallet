@@ -5,7 +5,10 @@
         <div class="fs-3">Welcome {{ user.displayName }}</div>
       </div>
       <div v-else>
-        <LoginView v-if="!isSignUp" @isRegister="isSignUp = true" />
+        <LoginView
+          v-if="!isSignUp && !checkAccount"
+          @isRegister="isSignUp = true"
+        />
         <SignUp v-else @isLogin="isSignUp = false" />
       </div>
     </div>
@@ -15,8 +18,9 @@
 <script>
 import SignUp from "../components/users/SignUp";
 import LoginView from "../components/users/LoginView";
-import { ref } from "vue";
+import { computed, onMounted, ref } from "vue";
 import getUser from "@/composables/getUser";
+import store from "@/store";
 export default {
   name: "HomeView",
   components: {
@@ -26,8 +30,9 @@ export default {
   setup() {
     let { user } = getUser();
     let isSignUp = ref(false);
+    let checkAccount = computed(() => store.getters.checkAccount);
 
-    return { isSignUp, user };
+    return { isSignUp, user, checkAccount };
   },
 };
 </script>

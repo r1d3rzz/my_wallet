@@ -31,7 +31,7 @@
           class="form-group d-flex justify-content-between align-items-center"
         >
           <div class="text-muted">
-            If you have no account
+            If you have already account
             <span class="text-primary" role="button" @click="login">login</span>
             Here.
           </div>
@@ -55,6 +55,7 @@
 </template>
 <script>
 import useSignUp from "@/composables/useSingUp";
+import store from "@/store";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 
@@ -72,6 +73,7 @@ export default {
 
     let login = () => {
       emit("isLogin");
+      store.commit("goToRegister", false);
     };
 
     let signUp = async () => {

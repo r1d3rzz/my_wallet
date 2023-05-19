@@ -26,7 +26,7 @@
           class="form-group d-flex justify-content-between align-items-center"
         >
           <div class="text-muted">
-            If you have no account
+            If you have not account
             <span class="text-primary" role="button" @click="register"
               >register</span
             >
