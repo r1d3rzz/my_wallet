@@ -3,9 +3,21 @@
     <LoginView @closeLoginModal="isShow = false" @userLogin="userLogin" />
   </ConfirmView>
 
+  <ConfirmView v-if="isConfrimPayMent">
+    <ConfirmPayment
+      @closePayment="isConfrimPayMent = false"
+      :totalPrices="totalPrices"
+      :card="userCard[0]"
+    />
+  </ConfirmView>
+
   <div class="col-lg-4 bg-light">
     <div class="p-5">
       <h3 class="fw-bold mb-5 mt-2 pt-1">Summary</h3>
+
+      <div class="alert alert-danger" v-if="walletMoneyError">
+        {{ walletMoneyError }}
+      </div>
       <hr class="my-4" />
 
       <div class="d-flex justify-content-between mb-4">
@@ -73,7 +85,8 @@
 
       <button
         type="button"
-        :disabled="isDisable"
+        @click="checkOut"
+        :disabled="isDisable || !userCard.length"
         class="btn btn-dark w-100"
         data-mdb-ripple-color="dark"
       >
@@ -83,6 +96,7 @@
   </div>
 </template>
 <script>
+import ConfirmPayment from "./ConfirmPayment";
 import LoginView from "../../cards/user/LoginView";
 import ConfirmView from "../../ConfirmView";
 import store from "@/store";
@@ -93,6 +107,7 @@ import { useRouter } from "vue-router";
 
 export default {
   components: {
+    ConfirmPayment,
     LoginView,
     ConfirmView,
   },
@@ -108,6 +123,8 @@ export default {
     let isShow = ref(false);
     let hasUser = ref(false);
     let router = useRouter();
+    let walletMoneyError = ref("");
+    let isConfrimPayMent = ref(false);
 
     let getAllCards = async () => {
       await load();
@@ -141,6 +158,19 @@ export default {
       router.push({ name: "createCredit" });
     };
 
+    let checkOut = () => {
+      let userWalletAmount = userCard.value[0].card_amount;
+      let cartTotalPrice = totalPrices.value;
+      if (userWalletAmount > cartTotalPrice) {
+        isConfrimPayMent.value = true;
+      } else {
+        walletMoneyError.value = "Not Enough Wallet Balance";
+        setTimeout(() => {
+          walletMoneyError.value = "";
+        }, 3000);
+      }
+    };
+
     return {
       totalPrices,
       user,
@@ -152,6 +182,9 @@ export default {
       hasUser,
       userLogin,
       createWallet,
+      checkOut,
+      walletMoneyError,
+      isConfrimPayMent,
     };
   },
 };

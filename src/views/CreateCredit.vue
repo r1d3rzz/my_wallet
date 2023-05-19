@@ -224,12 +224,13 @@ export default {
       }
 
       if (amount.value >= 1000) {
+        let addAmount = Number(originalCardAmount) + Number(amount.value);
         try {
           await db
             .collection("cards")
             .doc(cardId)
             .update({
-              card_amount: originalCardAmount + amount.value,
+              card_amount: Number(addAmount.toFixed(2)),
               updated_at: timestamp(),
             })
             .then(() => {
