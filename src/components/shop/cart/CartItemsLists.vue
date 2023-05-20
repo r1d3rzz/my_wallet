@@ -7,6 +7,11 @@
         </h1>
         <h6 class="mb-0 text-muted">{{ products.length }} items</h6>
       </div>
+      <div>
+        <button class="btn btn-outline-danger" @click="removeAllItems">
+          Remove All Items
+        </button>
+      </div>
       <hr class="my-4" />
       <div v-for="product in products" :key="product.id">
         <SingleCartItem :product="product" />
@@ -26,20 +31,26 @@
   </div>
 </template>
 <script>
+import store from "@/store";
 import SingleCartItem from "./SingleCartItem";
 import { useRouter } from "vue-router";
+import { watch } from "vue";
 
 export default {
   components: { SingleCartItem },
   props: ["products"],
-  setup() {
+  setup(props) {
     let router = useRouter();
 
     let goBack = () => {
       router.go(-1);
     };
 
-    return { goBack };
+    let removeAllItems = () => {
+      store.commit("clearAllLocalStorage");
+    };
+
+    return { goBack, removeAllItems };
   },
 };
 </script>

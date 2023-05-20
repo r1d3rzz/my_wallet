@@ -43,6 +43,7 @@
 </template>
 <script>
 import { db } from "@/firebase/config";
+import store from "@/store";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 
@@ -83,6 +84,7 @@ export default {
           })
           .then(() => {
             isLoading.value = false;
+            store.commit("clearAllLocalStorage");
             router.push({ name: "userProfile" });
           });
       }
